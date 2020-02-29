@@ -18,7 +18,7 @@ class BestShippingOptionsService extends RepositoryService
 
     public function getBestShippingOptionByCostAndTime(array $data)
     {
-        $shippingOptions = $this->getItemByOriginAndDestination($data);
+        $shippingOptions = $this->repository->getItensByOriginAndDestination($data);
         $this->filterItemsByTheBestShippingOption($shippingOptions);
 
         return new BestShippingOptionsResource(
@@ -61,15 +61,5 @@ class BestShippingOptionsService extends RepositoryService
         $this->bestShippingOptions[] = $option;
     }
 
-    private function getItemByOriginAndDestination(array $data)
-    {
-        $origin = isset($data['origin']['zip_code']) ? str_replace("-", "", $data['origin']['zip_code']) : null;
-        $destination = isset($data['destination']['zip_code']) ? str_replace("-", "", $data['destination']['zip_code'])  : null;
 
-        return $this->query([
-                'origin' => $origin,
-                'destination' => $destination
-            ])->get()
-            ->toArray();
-    }
 }
