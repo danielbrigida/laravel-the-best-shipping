@@ -3,6 +3,7 @@ namespace Modules\Shipping\Services;
 
 use Modules\Core\Services\RepositoryService;
 use Modules\Shipping\Repositories\ShippingOptionsRepository;
+use Modules\Shipping\Transformers\BestShippingOptionsResource;
 
 class BestShippingOptionsService extends RepositoryService
 {
@@ -20,9 +21,9 @@ class BestShippingOptionsService extends RepositoryService
         $shippingOptions = $this->getItemByOriginAndDestination($data);
         $this->filterItemsByTheBestShippingOption($shippingOptions);
 
-
-
-        dd($this->bestShippingOptions);
+        return new BestShippingOptionsResource(
+            $this->bestShippingOptions
+        );
     }
 
     private function filterItemsByTheBestShippingOption(array $shippingOptions): void

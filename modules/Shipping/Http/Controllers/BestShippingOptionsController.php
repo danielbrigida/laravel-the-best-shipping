@@ -2,7 +2,6 @@
 
 namespace Modules\Shipping\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Modules\Core\Http\Controllers\CoreController;
 use Modules\Shipping\Http\Requests\BestShippingOptionsRequest;
 use Modules\Shipping\Services\BestShippingOptionsService;
@@ -18,8 +17,7 @@ class BestShippingOptionsController extends CoreController
 
     public function index(BestShippingOptionsRequest $request)
     {
-        try{
-
+        try {
             return \DB::transaction(function() use ($request) {
                 return $this->bestShippingOptionsService->getBestShippingOptionByCostAndTime($request->all());
             });
