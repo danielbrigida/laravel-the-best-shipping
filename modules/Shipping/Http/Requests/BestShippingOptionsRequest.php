@@ -17,8 +17,8 @@ class BestShippingOptionsRequest extends GeneralRequest
         return [
             'origin' => ['required','array'],
             'destination' => ['required','array'],
-            'origin.*' => ['required','numeric','max:9999999'],
-            'estimated_days' => ['required','integer','max:10000'],
+            'origin.zip_code' => ['required'],
+            'destination.zip_code' => ['required'],
         ];
     }
 }
