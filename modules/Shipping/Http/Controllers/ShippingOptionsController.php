@@ -6,7 +6,6 @@ use Modules\Core\Http\Controllers\CoreController;
 use Modules\Shipping\Http\Requests\ShippingOptionsRequest;
 use Modules\Shipping\Services\ShippingOptionsService;
 
-
 class ShippingOptionsController extends CoreController
 {
     private $shippingOptionsService;
@@ -28,14 +27,12 @@ class ShippingOptionsController extends CoreController
         }
     }
 
-
     public function show($id)
     {
         return $this->shippingOptionsService->find($id);
     }
 
-
-     public function store(ShippingOptionsRequest $request)
+    public function store(ShippingOptionsRequest $request)
     {
         try{
             $id = \DB::transaction(function() use ($request){
@@ -69,7 +66,6 @@ class ShippingOptionsController extends CoreController
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
-
 
     public function destroy($id)
     {

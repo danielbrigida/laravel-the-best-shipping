@@ -1,6 +1,6 @@
 <?php
 
-// api/shipping-options
+// Route: api/shipping-options
 Route::prefix('shipping-options')->group(function(){
 
     Route::post('/', [
@@ -27,5 +27,12 @@ Route::prefix('shipping-options')->group(function(){
         'as' => 'shipping_options.destroy',
         'uses' => 'ShippingOptionsController@destroy'
     ]);
+});
 
+// Route: api/best-shipping-options
+Route::prefix('best-shipping-options')->group(function(){
+    Route::get('/', [
+        'as' => 'shipping_options.index',
+        'uses' => 'BestShippingOptionsController@index'
+    ]);
 });

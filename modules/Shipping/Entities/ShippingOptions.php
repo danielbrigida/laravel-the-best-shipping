@@ -19,5 +19,13 @@ class ShippingOptions extends Model
         'estimated_days'
     ];
 
+    public function setOriginAttribute($value)
+    {
+        $this->attributes['origin']  = str_replace("-", "", $value);
+    }
 
+    public function setDestinationAttribute($value)
+    {
+        $this->attributes['destination']  = str_replace("-", "", $value);
+    }
 }

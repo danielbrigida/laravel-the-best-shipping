@@ -20,7 +20,7 @@ class ShippingOptionsService extends RepositoryService
         );
     }
 
-     public function save(array $data) {
+    public function save(array $data) {
         $id = parent::save($data);
         return $id;
     }
