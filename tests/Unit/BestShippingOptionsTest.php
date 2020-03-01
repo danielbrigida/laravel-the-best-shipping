@@ -51,7 +51,6 @@ class BestShippingOptionsTest extends TestCase
         $this->assertCount(1,$response->resolve());
     }
 
-
     private function executeBestShippingOptionByCostAndTime(array $dataSource)
     {
         $shippingOptionsRepository = $this->instance(ShippingOptionsRepository::class, Mockery::mock(ShippingOptionsRepository::class, function ($mock) use ($dataSource) {
@@ -73,6 +72,7 @@ class BestShippingOptionsTest extends TestCase
         return $response;
     }
 
+    // DataSource Response
     public function expectedResponseSameCostsAndEstimatedDates()
     {
         $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);

@@ -23,7 +23,9 @@ class ShippingOptionsRepository extends Repository {
         return $this->query([
                 'origin' => $origin,
                 'destination' => $destination
-            ])->get()
+            ])
+            ->orderBy('name')
+            ->get()
             ->toArray();
     }
 
