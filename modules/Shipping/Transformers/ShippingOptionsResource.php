@@ -2,7 +2,7 @@
 namespace Modules\Shipping\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
-      
+
 class ShippingOptionsResource extends Resource
 {
 
@@ -20,7 +20,7 @@ class ShippingOptionsResource extends Resource
         	'type'  => $this->type,
             'origin'=> $this->origin,
             'destination'=> $this->destination,
-            'cost'=> $this->cost,
+            'cost'=> (float) $this->cost,
             'estimated_days'=> $this->estimated_days,
         ];
     }
