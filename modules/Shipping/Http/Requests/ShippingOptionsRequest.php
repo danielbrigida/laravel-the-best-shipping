@@ -27,8 +27,8 @@ class ShippingOptionsRequest extends GeneralRequest
                     $fail('Invalid zip code. Format: 00000-000');
                 }
             }],
-            'cost' => ['required','numeric','max:9999999'],
-            'estimated_days' => ['required','integer','max:10000'],
+            'cost' => ['required','numeric','min:0','max:9999999'],
+            'estimated_days' => ['required','integer','min:1','max:10000'],
         ];
     }
 

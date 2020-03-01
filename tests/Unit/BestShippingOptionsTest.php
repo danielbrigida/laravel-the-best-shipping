@@ -2,67 +2,113 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
-use Modules\Core\Services\RepositoryService;
-use Modules\Shipping\Http\Controllers\BestShippingOptionsController;
-use Modules\Shipping\Http\Requests\BestShippingOptionsRequest;
+use Modules\Core\Services\DateTimeService;
 use Modules\Shipping\Repositories\ShippingOptionsRepository;
 use Modules\Shipping\Services\BestShippingOptionsService;
+use Tests\DataSource\BestShippingOptions\DataSource;
 use Tests\TestCase;
 
 class BestShippingOptionsTest extends TestCase
 {
+    private $dateTimeService;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->dateTimeService = resolve(DateTimeService::class);
+    }
+
+    public function testSameCostsAndEstimatedDates()
+    {
+        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::sameCostsAndEstimatedDates());
+
+        $this->assertEquals($response->resolve() , $this->expectedResponseSameCostsAndEstimatedDates());
+        $this->assertCount(3,$response->resolve());
+    }
+
+    public function testDifferentEstimatedDeliveryDates()
+    {
+        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::differentEstimatedDeliveryDates());
+
+        $this->assertEquals($response->resolve() , $this->expectedResponseDifferentEstimatedDeliveryDates());
+        $this->assertCount(2,$response->resolve());
+    }
+
+    public function testDifferentShippingCosts()
+    {
+        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::differentShippingCosts());
+
+        $this->assertEquals($response->resolve() , $this->expectedResponseDifferentShippingCosts());
+        $this->assertCount(1,$response->resolve());
+    }
+
+    public function testDifferentCostsAndDifferentEstimatedDates()
+    {
+        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::differentCostsAndDifferentEstimatedDates());
+
+        $this->assertEquals($response->resolve() , $this->expectedResponseDifferentCostsAndDifferentEstimatedDates());
+        $this->assertCount(1,$response->resolve());
+    }
 
 
-
-    public function testSimpleMock() {
-
-
-        $shippingOptionsRepository =  $this->instance(ShippingOptionsRepository::class, Mockery::mock(ShippingOptionsRepository::class, function ($mock) {
+    private function executeBestShippingOptionByCostAndTime(array $dataSource)
+    {
+        $shippingOptionsRepository = $this->instance(ShippingOptionsRepository::class, Mockery::mock(ShippingOptionsRepository::class, function ($mock) use ($dataSource) {
             $mock->shouldReceive([
-                'getItensByOriginAndDestination' => static::differentEstimatedDeliveryDates()
+                'getItensByOriginAndDestination' => $dataSource
             ])->once();
         }));
 
         $bestShippingOptionsService = new BestShippingOptionsService($shippingOptionsRepository);
+        $response = $bestShippingOptionsService->getBestShippingOptionByCostAndTime([
+            'origin' => [
+                'zip_code' => '12678-213',
+            ],
+            'destination' => [
+                'zip_code' => '21345-283',
+            ],
+        ]);
 
-
-        $bestShippingOptions = $bestShippingOptionsService->getBestShippingOptionByCostAndTime(['10'])->resolve();
-
-        $this->assertEquals($bestShippingOptions , static::returnDifferentEstimatedDeliveryDates());
-
+        return $response;
     }
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    /*public function testBasicTest()
+
+    public function expectedResponseSameCostsAndEstimatedDates()
     {
-        $mock = Mockery::mock(BestShippingOptionsService::class);
-        $mock->shouldReceive('getItensByOriginAndDestination')
-            ->once();
+        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
 
-        $bestShippingOptionsService = resolve(BestShippingOptionsService::class);
-        $bestShippingOptionsService->getBestShippingOptionByCostAndTime([]);
-
-    }*/
-
-    public static function  returnDifferentEstimatedDeliveryDates()
-    {
         return [
-            ["name" =>"Option 2","type"=>"Custom","cost"=>10.0,"estimated_date" => "2020-03-04 00:00:00"],
-            ["name" =>"Option 3","type"=>"Pickup","cost"=>10.0,"estimated_date" => "2020-03-04 00:00:00"]
+            ["name"=> "Option 1","type"=> "Delivery","cost"=> 10.00,"estimated_date" => $date . " 00:00:00"],
+            ["name"=> "Option 2","type"=> "Custom","cost"=> 10.00,"estimated_date" =>  $date . " 00:00:00"],
+            ["name"=> "Option 3","type"=> "Pickup","cost"=> 10.00,"estimated_date" =>  $date . " 00:00:00"]
         ];
     }
 
-    public static function  differentEstimatedDeliveryDates()
+    public  function  expectedResponseDifferentEstimatedDeliveryDates()
     {
+        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
+
         return [
-            ["name" =>"Option 1","type" =>"Delivery","cost" =>10.00,"estimated_days"=>5],
-            ["name" =>"Option 2","type"=>"Custom","cost"=>10.00,"estimated_days"=>3],
-            ["name" =>"Option 3","type"=>"Pickup","cost"=>10.00,"estimated_days"=>3]
+            ["name" =>"Option 2","type"=>"Custom","cost"=>10.00,"estimated_date" =>  $date . " 00:00:00"],
+            ["name" =>"Option 3","type"=>"Pickup","cost"=>10.00,"estimated_date" =>  $date . " 00:00:00"]
+        ];
+    }
+
+    public function expectedResponseDifferentShippingCosts()
+    {
+        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
+
+        return [
+            ["name" => "Option 2","type" => "Custom","cost" => 5.00,"estimated_date" =>  $date . " 00:00:00"]
+        ];
+    }
+
+    public function expectedResponseDifferentCostsAndDifferentEstimatedDates()
+    {
+        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
+
+        return [
+            ["name" => "Option 2","type" => "Custom","cost"=> 5.00,"estimated_date" =>  $date . " 00:00:00"]
         ];
     }
 }
