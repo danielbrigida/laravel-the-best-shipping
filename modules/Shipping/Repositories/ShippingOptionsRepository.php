@@ -4,6 +4,7 @@ namespace Modules\Shipping\Repositories;
 
 use Modules\Core\Repositories\Repository;
 use Modules\Shipping\Entities\ShippingOptions;
+use Modules\Shipping\Transformers\ShippingOptionsResource;
 
 class ShippingOptionsRepository extends Repository {
 	protected $orderBy = [
@@ -27,6 +28,26 @@ class ShippingOptionsRepository extends Repository {
             ->orderBy('name')
             ->get()
             ->toArray();
+    }
+
+    public function getAll()
+    {
+        $request = $this->requestTable();
+        return ShippingOptionsResource::collection(
+            parent::fetchAll($request, \Request::get('pagineted', true))
+        );
+    }
+
+    public function save(array $data) {
+        $id = parent::save($data);
+        return $id;
+    }
+
+    public function find($id, $relations = [])
+    {
+        return new ShippingOptionsResource(
+            parent::find($id, $relations)
+        );
     }
 
 

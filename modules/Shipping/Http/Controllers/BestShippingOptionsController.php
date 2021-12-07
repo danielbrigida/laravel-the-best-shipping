@@ -4,22 +4,22 @@ namespace Modules\Shipping\Http\Controllers;
 
 use Modules\Core\Http\Controllers\CoreController;
 use Modules\Shipping\Http\Requests\BestShippingOptionsRequest;
-use Modules\Shipping\Services\BestShippingOptionsService;
+use Modules\Shipping\Repositories\BestShippingOptionsRepository;
 
 class BestShippingOptionsController extends CoreController
 {
-    private $bestShippingOptionsService;
+    private $bestShippingOptionsRepository;
 
-    public function __construct(BestShippingOptionsService $bestShippingOptionsService)
+    public function __construct(BestShippingOptionsRepository $bestShippingOptionsRepository)
     {
-        $this->bestShippingOptionsService = $bestShippingOptionsService;
+        $this->bestShippingOptionsRepository = $bestShippingOptionsRepository;
     }
 
     public function index(BestShippingOptionsRequest $request)
     {
         try {
             return \DB::transaction(function() use ($request) {
-                return $this->bestShippingOptionsService->getBestShippingOptionByCostAndTime($request->all());
+                return $this->bestShippingOptionsRepository->getBestShippingOptionByCostAndTime($request->all());
             });
         }
         catch(\Exception $exception){

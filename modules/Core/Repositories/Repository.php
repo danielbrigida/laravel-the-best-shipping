@@ -14,7 +14,7 @@ abstract class Repository {
 	protected $orderBy = [];
 
 
-	public function getAll(array $filter = [], $paginated = false)
+	public function fetchAll(array $filter = [], $paginated = false)
 	{
 		$select = $this->query($filter);
 		if(is_array($this->orderBy)){
@@ -135,5 +135,26 @@ abstract class Repository {
     public function countTotalItens(array $filter = [])
     {
         return $this->query($filter)->count();
+    }
+
+    public function requestTable(array $specialsOrders = [])
+    {
+        $request = \Request::all();
+        $request['page'] = \Request::get('page',1);
+        $sort = \Request::get('sortBy',null);
+        $sort = $sort == 'null' ? null : $sort;
+        if(in_array($sort, $specialsOrders)) {
+            $request['orderBy'] = [
+                $sort => \Request::get('descending') == "true" ? 'DESC' : 'ASC'
+            ];
+        }
+        elseif(!is_null($sort)){
+            $request['order'] = [
+                $sort => \Request::get('descending') == "true" ? 'DESC' : 'ASC'
+            ];
+        }
+        unset($request['sortBy']);
+        unset($request['descending']);
+        return $request;
     }
 }

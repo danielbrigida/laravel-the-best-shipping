@@ -1,24 +1,25 @@
 <?php
-namespace Modules\Shipping\Services;
 
-use Modules\Core\Services\RepositoryService;
-use Modules\Shipping\Repositories\ShippingOptionsRepository;
+namespace Modules\Shipping\Repositories;
+
+use Modules\Core\Repositories\Repository;
 use Modules\Shipping\Transformers\BestShippingOptionsResource;
 
-class BestShippingOptionsService extends RepositoryService
-{
+
+class BestShippingOptionsRepository extends Repository {
+
     private $bestShippingOptions;
     private $bestCost;
     private $bestTime;
 
     public function __construct(ShippingOptionsRepository $repository)
     {
-        parent::__construct($repository);
+        $this->model = $repository;
     }
 
     public function getBestShippingOptionByCostAndTime(array $data)
     {
-        $shippingOptions = $this->repository->getItensByOriginAndDestination($data);
+        $shippingOptions = $this->model->getItensByOriginAndDestination($data);
         $this->filterItemsByTheBestShippingOption($shippingOptions);
 
         return new BestShippingOptionsResource(
@@ -60,6 +61,5 @@ class BestShippingOptionsService extends RepositoryService
     {
         $this->bestShippingOptions[] = $option;
     }
-
 
 }

@@ -4,22 +4,22 @@ namespace Modules\Shipping\Http\Controllers;
 
 use Modules\Core\Http\Controllers\CoreController;
 use Modules\Shipping\Http\Requests\ShippingOptionsRequest;
-use Modules\Shipping\Services\ShippingOptionsService;
+use Modules\Shipping\Repositories\ShippingOptionsRepository;
 
 class ShippingOptionsController extends CoreController
 {
-    private $shippingOptionsService;
+    private $shippingOptionsRepository;
 
-    public function __construct(ShippingOptionsService $shippingOptionsService)
+    public function __construct(ShippingOptionsRepository $shippingOptionsRepository)
     {
-        $this->shippingOptionsService = $shippingOptionsService;
+        $this->shippingOptionsRepository = $shippingOptionsRepository;
     }
 
     public function index()
     {
         try{
             return \DB::transaction(function(){
-                return $this->shippingOptionsService->getAll();
+                return $this->shippingOptionsRepository->getAll();
             });
         }
         catch(\Exception $exception){
@@ -29,14 +29,14 @@ class ShippingOptionsController extends CoreController
 
     public function show($id)
     {
-        return $this->shippingOptionsService->find($id);
+        return $this->shippingOptionsRepository->find($id);
     }
 
     public function store(ShippingOptionsRequest $request)
     {
         try{
             $id = \DB::transaction(function() use ($request){
-                return $this->shippingOptionsService->save($request->all());
+                return $this->shippingOptionsRepository->save($request->all());
             });
 
             return response()->json([
@@ -55,7 +55,7 @@ class ShippingOptionsController extends CoreController
         $id = \DB::transaction(function () use ($request, $id){
             $data = $request->all();
             $data['id'] = $id;
-            return $this->shippingOptionsService->save($data);
+            return $this->shippingOptionsRepository->save($data);
         });
         return response()->json([
             'message' => 'Saved shipping options',
@@ -71,7 +71,7 @@ class ShippingOptionsController extends CoreController
     {
         try{
             \DB::transaction(function () use ($id){
-                return $this->shippingOptionsService->delete($id);
+                return $this->shippingOptionsRepository->delete($id);
             });
             return response()->json(['message' => 'Deleted shipping options'], 202);
         }
