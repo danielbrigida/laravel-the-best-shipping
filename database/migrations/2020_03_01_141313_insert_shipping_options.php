@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-use Modules\Shipping\Entities\ShippingOptions;
+use Modules\Shipping\Entities\ShippingOption;
 
 class InsertShippingOptions extends Migration
 {
@@ -55,6 +55,6 @@ class InsertShippingOptions extends Migration
      */
     public function down()
     {
-        ShippingOptions::query()->truncate();
+        ShippingOption::query()->truncate();
     }
 }

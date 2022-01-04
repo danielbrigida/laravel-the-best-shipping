@@ -34,7 +34,7 @@ class BestShippingOptionsResource extends Resource
             $this->bestOptionsFormatted[$i]['name'] = $option['name'];
             $this->bestOptionsFormatted[$i]['type'] = $option['type'];
             $this->bestOptionsFormatted[$i]['cost'] = (float) number_format($option['cost'],2);
-            $this->bestOptionsFormatted[$i]['estimated_date'] = $estimatedDate." 00:00:00";
+            $this->bestOptionsFormatted[$i]['estimated_date'] = $estimatedDate;
         }
 
         return $this->bestOptionsFormatted;

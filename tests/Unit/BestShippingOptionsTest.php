@@ -78,9 +78,9 @@ class BestShippingOptionsTest extends TestCase
         $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
 
         return [
-            ["name"=> "Option 1","type"=> "Delivery","cost"=> 10.00,"estimated_date" => $date . " 00:00:00"],
-            ["name"=> "Option 2","type"=> "Custom","cost"=> 10.00,"estimated_date" =>  $date . " 00:00:00"],
-            ["name"=> "Option 3","type"=> "Pickup","cost"=> 10.00,"estimated_date" =>  $date . " 00:00:00"]
+            ["name"=> "Option 1","type"=> "Delivery","cost"=> 10.00,"estimated_date" => $date],
+            ["name"=> "Option 2","type"=> "Custom","cost"=> 10.00,"estimated_date" =>  $date],
+            ["name"=> "Option 3","type"=> "Pickup","cost"=> 10.00,"estimated_date" =>  $date]
         ];
     }
 
@@ -89,8 +89,8 @@ class BestShippingOptionsTest extends TestCase
         $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
 
         return [
-            ["name" =>"Option 2","type"=>"Custom","cost"=>10.00,"estimated_date" =>  $date . " 00:00:00"],
-            ["name" =>"Option 3","type"=>"Pickup","cost"=>10.00,"estimated_date" =>  $date . " 00:00:00"]
+            ["name" =>"Option 2","type"=>"Custom","cost"=>10.00,"estimated_date" =>  $date],
+            ["name" =>"Option 3","type"=>"Pickup","cost"=>10.00,"estimated_date" =>  $date]
         ];
     }
 
@@ -99,7 +99,7 @@ class BestShippingOptionsTest extends TestCase
         $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
 
         return [
-            ["name" => "Option 2","type" => "Custom","cost" => 5.00,"estimated_date" =>  $date . " 00:00:00"]
+            ["name" => "Option 2","type" => "Custom","cost" => 5.00,"estimated_date" =>  $date]
         ];
     }
 
@@ -108,7 +108,7 @@ class BestShippingOptionsTest extends TestCase
         $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
 
         return [
-            ["name" => "Option 2","type" => "Custom","cost"=> 5.00,"estimated_date" =>  $date . " 00:00:00"]
+            ["name" => "Option 2","type" => "Custom","cost"=> 5.00,"estimated_date" =>  $date]
         ];
     }
 }

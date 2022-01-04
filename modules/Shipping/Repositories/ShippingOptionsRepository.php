@@ -3,7 +3,7 @@
 namespace Modules\Shipping\Repositories;
 
 use Modules\Core\Repositories\Repository;
-use Modules\Shipping\Entities\ShippingOptions;
+use Modules\Shipping\Entities\ShippingOption;
 use Modules\Shipping\Transformers\ShippingOptionsResource;
 
 class ShippingOptionsRepository extends Repository {
@@ -11,7 +11,7 @@ class ShippingOptionsRepository extends Repository {
 		'created_at' => 'DESC',
 	];
 
-	public function __construct(ShippingOptions $shippingOptions)
+	public function __construct(ShippingOption $shippingOptions)
 	{
 		$this->model = $shippingOptions;
     }
