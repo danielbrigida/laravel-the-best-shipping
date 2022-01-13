@@ -18,9 +18,7 @@ class ShippingOptionsController extends CoreController
     public function index()
     {
         try{
-            return \DB::transaction(function(){
-                return $this->shippingOptionsRepository->getAll();
-            });
+            return $this->shippingOptionsRepository->getAll();
         }
         catch(\Exception $exception){
             return response()->json(['error' => $exception->getMessage()], 500);
@@ -35,10 +33,8 @@ class ShippingOptionsController extends CoreController
     public function store(ShippingOptionsRequest $request)
     {
         try{
-            $id = \DB::transaction(function() use ($request){
-                return $this->shippingOptionsRepository->save($request->all());
-            });
-
+            $id = $this->shippingOptionsRepository->save($request->all());
+          
             return response()->json([
                 'message'   => 'Registered shipping options',
                 'data'      => $this->show($id),

@@ -4,6 +4,7 @@ namespace Modules\Shipping\Repositories;
 
 use Modules\Core\Repositories\Repository;
 use Modules\Shipping\Transformers\BestShippingOptionsResource;
+use \Illuminate\Support\Facades\DB;
 
 
 class BestShippingOptionsRepository extends Repository {
@@ -18,9 +19,13 @@ class BestShippingOptionsRepository extends Repository {
     }
 
     public function getBestShippingOptionByCostAndTime(array $data)
-    {
+    {     
+        DB::beginTransaction();
+
         $shippingOptions = $this->model->getItensByOriginAndDestination($data);
         $this->filterItemsByTheBestShippingOption($shippingOptions);
+     
+        DB::commit();
 
         return new BestShippingOptionsResource(
             $this->bestShippingOptions

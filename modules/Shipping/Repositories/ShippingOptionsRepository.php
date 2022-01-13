@@ -5,6 +5,7 @@ namespace Modules\Shipping\Repositories;
 use Modules\Core\Repositories\Repository;
 use Modules\Shipping\Entities\ShippingOption;
 use Modules\Shipping\Transformers\ShippingOptionsResource;
+use Illuminate\Support\Facades\DB;
 
 class ShippingOptionsRepository extends Repository {
 	protected $orderBy = [
@@ -39,7 +40,11 @@ class ShippingOptionsRepository extends Repository {
     }
 
     public function save(array $data) {
+        DB::beginTransaction();
+
         $id = parent::save($data);
+        
+        DB::transaction();
         return $id;
     }
 
