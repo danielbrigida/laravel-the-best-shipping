@@ -18,9 +18,7 @@ class BestShippingOptionsController extends CoreController
     public function index(BestShippingOptionsRequest $request)
     {
         try {
-         
             return $this->bestShippingOptionsRepository->getBestShippingOptionByCostAndTime($request->all());
-
         }
         catch(\Exception $exception){
             return response()->json(['error' => $exception->getMessage()], 500);

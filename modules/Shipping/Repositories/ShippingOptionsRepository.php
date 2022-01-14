@@ -40,11 +40,10 @@ class ShippingOptionsRepository extends Repository {
     }
 
     public function save(array $data) {
-        DB::beginTransaction();
-
-        $id = parent::save($data);
-        
-        DB::transaction();
+        $id = DB::transaction(function() use($data) {
+            return parent::save($data);
+        });
+       
         return $id;
     }
 

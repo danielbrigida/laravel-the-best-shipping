@@ -20,13 +20,10 @@ class BestShippingOptionsRepository extends Repository {
 
     public function getBestShippingOptionByCostAndTime(array $data)
     {     
-        DB::beginTransaction();
 
         $shippingOptions = $this->model->getItensByOriginAndDestination($data);
         $this->filterItemsByTheBestShippingOption($shippingOptions);
-     
-        DB::commit();
-
+        
         return new BestShippingOptionsResource(
             $this->bestShippingOptions
         );

@@ -48,11 +48,11 @@ class ShippingOptionsController extends CoreController
     public function update(ShippingOptionsRequest $request, $id)
     {
         try{
-        $id = \DB::transaction(function () use ($request, $id){
-            $data = $request->all();
-            $data['id'] = $id;
-            return $this->shippingOptionsRepository->save($data);
-        });
+         
+        $data = $request->all();
+        $data['id'] = $id;
+        $id = $this->shippingOptionsRepository->save($data);
+       
         return response()->json([
             'message' => 'Saved shipping options',
             'data' => $this->show($id),
@@ -66,9 +66,9 @@ class ShippingOptionsController extends CoreController
     public function destroy($id)
     {
         try{
-            \DB::transaction(function () use ($id){
-                return $this->shippingOptionsRepository->delete($id);
-            });
+            
+            $this->shippingOptionsRepository->delete($id);
+          
             return response()->json(['message' => 'Deleted shipping options'], 202);
         }
         catch (\Exception $exception)
