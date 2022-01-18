@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Mockery;
 use Modules\Core\Services\DateTimeService;
 use Modules\Shipping\Repositories\ShippingOptionsRepository;
-use Modules\Shipping\Services\BestShippingOptionsService;
+use Modules\Shipping\Repositories\BestShippingOptionsRepository;
 use Tests\DataSource\BestShippingOptions\DataSource;
 use Tests\TestCase;
 
@@ -19,9 +19,12 @@ class BestShippingOptionsTest extends TestCase
         $this->dateTimeService = resolve(DateTimeService::class);
     }
 
-    public function testSameCostsAndEstimatedDates()
+    /**
+     * @dataProvider Tests\DataSource\BestShippingOptions\DataSource::sameCostsAndEstimatedDates()
+     */
+    public function testSameCostsAndEstimatedDates($data)
     {
-        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::sameCostsAndEstimatedDates());
+        $response = $this->executeBestShippingOptionByCostAndTime($data);
 
         $this->assertEquals($response->resolve() , $this->expectedResponseSameCostsAndEstimatedDates());
         $this->assertCount(3,$response->resolve());
@@ -59,8 +62,8 @@ class BestShippingOptionsTest extends TestCase
             ])->once();
         }));
 
-        $bestShippingOptionsService = new BestShippingOptionsService($shippingOptionsRepository);
-        $response = $bestShippingOptionsService->getBestShippingOptionByCostAndTime([
+        $bestShippingOptionsRepository = new BestShippingOptionsRepository($shippingOptionsRepository);
+        $response = $bestShippingOptionsRepository->getBestShippingOptionByCostAndTime([
             'origin' => [
                 'zip_code' => '12678-213',
             ],

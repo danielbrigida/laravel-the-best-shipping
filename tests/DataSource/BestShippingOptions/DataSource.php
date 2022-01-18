@@ -8,9 +8,13 @@ class DataSource
     public static function sameCostsAndEstimatedDates()
     {
         return [
-            ["name" => "Option 1","type" => "Delivery","cost" => 10.00,"estimated_days" => 3],
-            ["name" => "Option 2","type" => "Custom","cost" => 10.00,"estimated_days" => 3],
-            ["name" => "Option 3","type" => "Pickup","cost" => 10.00,"estimated_days" => 3]
+           'item_1' => [
+               'provider' => [
+                    ["name" => "Option 1","type" => "Delivery","cost" => 10.00,"estimated_days" => 3],
+                    ["name" => "Option 2","type" => "Custom","cost" => 10.00,"estimated_days" => 3],
+                    ["name" => "Option 3","type" => "Pickup","cost" => 10.00,"estimated_days" => 3]
+               ],    
+            ],    
         ];
     }
 
