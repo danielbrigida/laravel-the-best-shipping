@@ -22,11 +22,11 @@ class BestShippingOptionsTest extends TestCase
     /**
      * @dataProvider Tests\DataSource\BestShippingOptions\DataSource::sameCostsAndEstimatedDates()
      */
-    public function testSameCostsAndEstimatedDates($data)
+    public function testSameCostsAndEstimatedDates($input,$expected)
     {
-        $response = $this->executeBestShippingOptionByCostAndTime($data);
+        $response = $this->executeBestShippingOptionByCostAndTime($input);
 
-        $this->assertEquals($response->resolve() , $this->expectedResponseSameCostsAndEstimatedDates());
+        $this->assertEquals($response->resolve() , $expected);
         $this->assertCount(3,$response->resolve());
     }
 
@@ -76,17 +76,6 @@ class BestShippingOptionsTest extends TestCase
     }
 
     // DataSource Response
-    public function expectedResponseSameCostsAndEstimatedDates()
-    {
-        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
-
-        return [
-            ["name"=> "Option 1","type"=> "Delivery","cost"=> 10.00,"estimated_date" => $date],
-            ["name"=> "Option 2","type"=> "Custom","cost"=> 10.00,"estimated_date" =>  $date],
-            ["name"=> "Option 3","type"=> "Pickup","cost"=> 10.00,"estimated_date" =>  $date]
-        ];
-    }
-
     public  function  expectedResponseDifferentEstimatedDeliveryDates()
     {
         $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);

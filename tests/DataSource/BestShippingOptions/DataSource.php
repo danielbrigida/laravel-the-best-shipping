@@ -2,19 +2,31 @@
 
 namespace Tests\DataSource\BestShippingOptions;
 
+use Modules\Core\Services\DateTimeService;
 
 class DataSource
 {
+  
     public static function sameCostsAndEstimatedDates()
     {
+        $dateTimeService = resolve(DateTimeService::class);
+        $date = $dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
+
         return [
-           'item_1' => [
-               'provider' => [
+           'provider' => [
+               'input' => [
                     ["name" => "Option 1","type" => "Delivery","cost" => 10.00,"estimated_days" => 3],
                     ["name" => "Option 2","type" => "Custom","cost" => 10.00,"estimated_days" => 3],
                     ["name" => "Option 3","type" => "Pickup","cost" => 10.00,"estimated_days" => 3]
-               ],    
-            ],    
+               ], 
+                'expected' => [
+
+                    ["name"=> "Option 1","type"=> "Delivery","cost"=> 10.00,"estimated_date" => $date],
+                    ["name"=> "Option 2","type"=> "Custom","cost"=> 10.00,"estimated_date" =>  $date],
+                    ["name"=> "Option 3","type"=> "Pickup","cost"=> 10.00,"estimated_date" =>  $date]
+                ], 
+                  
+            ],
         ];
     }
 
