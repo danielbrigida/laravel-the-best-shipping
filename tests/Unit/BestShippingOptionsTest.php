@@ -6,7 +6,7 @@ use Mockery;
 use Modules\Core\Services\DateTimeService;
 use Modules\Shipping\Repositories\ShippingOptionsRepository;
 use Modules\Shipping\Repositories\BestShippingOptionsRepository;
-use Tests\DataSource\BestShippingOptions\DataSource;
+use Tests\DataProvider\BestShippingOptions\DataProvider;
 use Tests\TestCase;
 
 class BestShippingOptionsTest extends TestCase
@@ -20,7 +20,7 @@ class BestShippingOptionsTest extends TestCase
     }
 
     /**
-     * @dataProvider Tests\DataSource\BestShippingOptions\DataSource::sameCostsAndEstimatedDates()
+     * @dataProvider Tests\DataProvider\BestShippingOptions\DataProvider::sameCostsAndEstimatedDates()
      */
     public function testSameCostsAndEstimatedDates($input,$expected)
     {
@@ -30,27 +30,37 @@ class BestShippingOptionsTest extends TestCase
         $this->assertCount(3,$response->resolve());
     }
 
-    public function testDifferentEstimatedDeliveryDates()
+     /**
+     * @dataProvider Tests\DataProvider\BestShippingOptions\DataProvider::differentEstimatedDeliveryDates()
+     */
+    public function testDifferentEstimatedDeliveryDates($input,$expected)
     {
-        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::differentEstimatedDeliveryDates());
+        $response = $this->executeBestShippingOptionByCostAndTime($input);
 
-        $this->assertEquals($response->resolve() , $this->expectedResponseDifferentEstimatedDeliveryDates());
+        $this->assertEquals($response->resolve() , $expected);
         $this->assertCount(2,$response->resolve());
     }
 
-    public function testDifferentShippingCosts()
+     /**
+     * @dataProvider Tests\DataProvider\BestShippingOptions\DataProvider::differentShippingCosts()
+     */
+    public function testDifferentShippingCosts($input,$expected)
     {
-        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::differentShippingCosts());
+        $response = $this->executeBestShippingOptionByCostAndTime($input);
 
-        $this->assertEquals($response->resolve() , $this->expectedResponseDifferentShippingCosts());
+        $this->assertEquals($response->resolve() , $expected);
         $this->assertCount(1,$response->resolve());
     }
+    
 
-    public function testDifferentCostsAndDifferentEstimatedDates()
+    /**
+     * @dataProvider Tests\DataProvider\BestShippingOptions\DataProvider::differentCostsAndDifferentEstimatedDates()
+     */
+    public function testDifferentCostsAndDifferentEstimatedDates($input,$expected)
     {
-        $response = $this->executeBestShippingOptionByCostAndTime(DataSource::differentCostsAndDifferentEstimatedDates());
+        $response = $this->executeBestShippingOptionByCostAndTime($input);
 
-        $this->assertEquals($response->resolve() , $this->expectedResponseDifferentCostsAndDifferentEstimatedDates());
+        $this->assertEquals($response->resolve() , $expected);
         $this->assertCount(1,$response->resolve());
     }
 
@@ -73,34 +83,5 @@ class BestShippingOptionsTest extends TestCase
         ]);
 
         return $response;
-    }
-
-    // DataSource Response
-    public  function  expectedResponseDifferentEstimatedDeliveryDates()
-    {
-        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
-
-        return [
-            ["name" =>"Option 2","type"=>"Custom","cost"=>10.00,"estimated_date" =>  $date],
-            ["name" =>"Option 3","type"=>"Pickup","cost"=>10.00,"estimated_date" =>  $date]
-        ];
-    }
-
-    public function expectedResponseDifferentShippingCosts()
-    {
-        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
-
-        return [
-            ["name" => "Option 2","type" => "Custom","cost" => 5.00,"estimated_date" =>  $date]
-        ];
-    }
-
-    public function expectedResponseDifferentCostsAndDifferentEstimatedDates()
-    {
-        $date = $this->dateTimeService->sumWorkingDays(date('Y-m-d'), 3);
-
-        return [
-            ["name" => "Option 2","type" => "Custom","cost"=> 5.00,"estimated_date" =>  $date]
-        ];
     }
 }
