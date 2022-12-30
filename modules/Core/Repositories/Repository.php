@@ -5,14 +5,11 @@ namespace Modules\Core\Repositories;
 use Illuminate\Database\Eloquent\Builder;
 
 abstract class Repository {
-
-
     protected $model;
     protected $primaryVal = 0;
     protected $perPage = 10;
     protected $paginator = null;
 	protected $orderBy = [];
-
 
 	public function fetchAll(array $filter = [], $paginated = false)
 	{
@@ -53,19 +50,34 @@ abstract class Repository {
 
 		foreach ($filter as $key => $value) {
 			if (!in_array($key, $exceptions)) {
-				if (is_numeric($value) && $value > 0) {
-					$select->where($key, '=', $value);
-				} elseif (is_array($value) && count($value)){
-					$select->whereIn($key, $value);
-				} elseif ($value != "" && $value != "0" && !is_null($value) && !is_array($value)) {
-					$select->where($key, 'like', "%{$value}%");
-				}
+				$select = $this->setDynamicWhere([
+                    'value' => $value,
+                    'select'=> $select,
+                    'key'=> $key
+                ]);
 			}
 		}
 		return $this;
 	}
 
+    private function setDynamicWhere(array $data = [])
+    {
+        $value = $data['value'] ?? null;
+        $select = $data['select'] ?? null;
+        $key = $data['key'] ?? null;
 
+        if (is_numeric($value) && $value > 0) {
+            $select->where($key, '=', $value);
+        } 
+        if (is_array($value) && count($value)){
+            $select->whereIn($key, $value);
+        } 
+        if($value && !is_array($value) && !is_numeric($value)) {
+            $select->where($key, 'like', "%{$value}%");
+        }
+
+        return $select;
+    }
 
     public function find($id, array $relations = [])
     {
@@ -85,13 +97,11 @@ abstract class Repository {
 		return $this->primaryVal;
 	}
 
-
     public function create(array $data)
     {
         $model = get_class($this->model);
         return $model::create($data);
     }
-
 
     public function update($id, array $data)
     {
@@ -125,12 +135,10 @@ abstract class Repository {
         return $this;
     }
 
-
     public function getPerPage()
     {
         return $this->perPage;
     }
-
 
     public function countTotalItens(array $filter = [])
     {
